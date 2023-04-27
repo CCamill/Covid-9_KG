@@ -16,7 +16,7 @@ def get_address(docx_path):
     patient_name = get_name(docx_path)
     for para in doc.paragraphs:
         paragraphs.append(para.text)
-    text = ''
+
     if patient_name in paragraphs[3]:
         text = paragraphs[3]  # str
     elif patient_name in paragraphs[4]:
@@ -27,21 +27,27 @@ def get_address(docx_path):
         return '未知'
 
     text = text.replace('：', ':')
+    text = text.replace('；', ',')
+    text = text.replace(';', ',')
     text = text.replace(' ', '')
     text = text.replace('，', ',')
     text = text.replace('。', ',')
+    text = text.replace('（', '(')
+    text = text.replace('）', ')')
     print(text)
     try:
-        p = u'(?:址:)[\u4e00-\u9fa5+0-9]{1,30}(?:,)'
+        p = u'(?:址:)[\u4e00-\u9fa5a-zA-Z0-9().-]{1,35}(?:,)'
         reg = re.compile(p)
         res = reg.findall(text)
         address = res[0][2:-1]
         return address
     except Exception as e:
         return '未知'
-docx_path = r'document/12.04/关于申国亮的调查报告.docx'
-address = get_address(docx_path)
-print(address)
+
+if __name__ == '__main__':
+    docx_path = r'document/11.28/关于李利锋的调查报告.docx'
+    address = get_address(docx_path)
+    print(address)
 
 
 

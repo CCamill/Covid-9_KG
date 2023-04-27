@@ -11,7 +11,7 @@ def get_NAT(docx_path):
         paragraphs.append(para.text)
         # print(para.text)
     for idx,para in enumerate(paragraphs):
-        if '检测情况'  in para and '核酸'  in para and ('三、'  in para or '四、'  in para):
+        if '检测情况'  in para and ('核酸'  in para or '实验室' in para)and ('三、' in para or '四、' in para):
             print(para)
             start_idx = idx+1
             # print(start_idx)
@@ -21,11 +21,15 @@ def get_NAT(docx_path):
     paragrapg = doc.paragraphs[start_idx:]
     if start_idx != -1:
         for para in doc.paragraphs[start_idx:]:
-            if '核酸' or '单采' in para.text:
+            if '核酸' in para.text or '单采' in para.text or '核算' in para.text:
                 nat_para.append(para.text)
+    if len(nat_para) == 0:
+        nat = '未知'
+    else:
+        nat = '阴性'
     print(nat_para)
     positive_text = ''
-    nat = '阴性'
+
     for para in nat_para:
         if ('阳性' in para or '异常' in para) and ('月' in para or '日' in para):
             positive_text = para
@@ -39,6 +43,6 @@ def get_NAT(docx_path):
     return nat
 
 if __name__ == '__main__':
-    path = r'document/12.04/关于刘善印的调查报告.docx'
+    path = r'document/11.27/关于马明肖的调查报告.docx'
     nat = get_NAT(path)
     print(nat)
